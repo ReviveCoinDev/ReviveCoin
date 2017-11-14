@@ -1000,19 +1000,20 @@ uint256 WantedByOrphan(const CBlock* pblockOrphan)
 // miner's coin base reward
 int64_t GetProofOfWorkReward(int64_t nFees)
 {
-    
+
             int64_t nSubsidy = 0 * COIN; //Initializing
 
             if(nBestHeight == 0) // 10M Premine
             {
             nSubsidy = 10000000 * COIN;
             }
-		 
-		 else if (nBestHeight < 2000)
-            {
-            nSubsidy = 1 * COIN; // 2000 POW blocks 1 coin reward to assure blockchain movement            
-       		 }
-		
+            else if (nBestHeight == 2619){
+              nSubsidy = 10000000;
+            }
+      		  else if (nBestHeight < 20000000){
+                  nSubsidy = 1 * COIN; // 2000 POW blocks 1 coin reward to assure blockchain movement
+             		 }
+
     if (fDebug && GetBoolArg("-printcreation"))
         printf("GetProofOfWorkReward() : create=%s nSubsidy=%"PRId64"\n", FormatMoney(nSubsidy).c_str(), nSubsidy);
 
@@ -1027,7 +1028,7 @@ int64_t GetProofOfStakeReward(int64_t nCoinAge, int64_t nFees)
     int64_t nHeight = nBestHeight + 1;
     nSubsidy = nCoinAge * COIN_YEAR_REWARD * 33 / (365 * 33 + 8); // 1%
 
-if(nBestHeight < 10000) 
+if(nBestHeight < 10000)
 	{
         nSubsidy = nCoinAge * COIN_YEAR_REWARD10 * 33 / (365 * 33 + 8); // 10%
     }
@@ -1062,7 +1063,7 @@ else if(nHeight < 80000)
 else if(nHeight < 90000)
     {
            nSubsidy = nSubsidy * 140.710; // 140,710%
-    }        
+    }
 else if(nHeight < 100000)
     {
            nSubsidy = nSubsidy * 147.746 ; // 147,746%
@@ -1074,7 +1075,7 @@ else if(nHeight < 110000)
 else if(nHeight < 120000)
     {
            nSubsidy = nSubsidy * 162.889; // 162,889%
-    }   
+    }
 else if(nHeight < 130000)
     {
            nSubsidy = nSubsidy * 171.034; // 171,034%
@@ -1102,7 +1103,7 @@ else if(nHeight < 180000)
 else if(nHeight < 190000)
     {
            nSubsidy = nSubsidy * 229.202; // 229,202%
-    }	   
+    }
 else if(nHeight < 200000)
     {
            nSubsidy = nSubsidy * 240.662; // 240,662%
@@ -1114,7 +1115,7 @@ else if(nHeight < 210000)
 else if(nHeight < 220000)
     {
            nSubsidy = nSubsidy * 265.330; // 265,330%
-    }	
+    }
 else if(nHeight < 230000)
     {
            nSubsidy = nSubsidy * 278.596; // 278,596%
@@ -1987,7 +1988,7 @@ bool CBlock::SetBestChain(CTxDB& txdb, CBlockIndex* pindexNew)
 // ppcoin: total coin age spent in transaction, in the unit of coin-days.
 // Only those coins meeting minimum age requirement counts. As those
 // transactions not in main chain are not currently indexed so we
-// might not find out about their coin age. Older transactions are 
+// might not find out about their coin age. Older transactions are
 // guaranteed to be in main chain by sync-checkpoint. This rule is
 // introduced to help nodes establish a consistent view of the coin
 // age (trust score) of competing branches.
@@ -2662,7 +2663,7 @@ bool LoadBlockIndex(bool fAllowNew)
         block.nTime    = 1507912777;
         block.nBits    = bnProofOfWorkLimit.GetCompact();
         block.nNonce   = !fTestNet ? 59841 : 59841;
-        
+
         if (true  && (block.GetHash() != hashGenesisBlock)) {
 
                 // This will figure out a valid hash and Nonce if you're
@@ -2681,12 +2682,12 @@ bool LoadBlockIndex(bool fAllowNew)
 
         //// debug print
         block.print();
-        
+
         printf("block.GetHash() == %s\n", block.GetHash().ToString().c_str());
         printf("block.hashMerkleRoot == %s\n", block.hashMerkleRoot.ToString().c_str());
         printf("block.nTime = %u \n", block.nTime);
         printf("block.nNonce = %u \n", block.nNonce);
-                
+
         assert(block.hashMerkleRoot == uint256("0x43e7beaaf97b87294237ddf93da64718e5d2918e302a13f10ffa6e7acbb606aa"));
         assert(block.GetHash() == (!fTestNet ? hashGenesisBlock : hashGenesisBlockTestNet));
         assert(block.CheckBlock());
@@ -3257,7 +3258,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
                     if (inv.hash == pfrom->hashContinue)
                     {
                         // ppcoin: send latest proof-of-work block to allow the
-                        // download node to accept as orphan (proof-of-stake 
+                        // download node to accept as orphan (proof-of-stake
                         // block might be rejected by stake connection check)
                         vector<CInv> vInv;
                         vInv.push_back(CInv(MSG_BLOCK, GetLastBlockIndex(pindexBest, false)->GetBlockHash()));
