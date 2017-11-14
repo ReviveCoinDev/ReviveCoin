@@ -1,4 +1,4 @@
 obj/version.o: version.cpp version.h clientversion.h \
- /home/cbpool/Wallets/REVIVEMASTER/src/obj/build.h
+ /home/coins/revivecoin/src/obj/build.h
 version.cpp version.h clientversion.h :
- /home/cbpool/Wallets/REVIVEMASTER/src/obj/build.h :
+ /home/coins/revivecoin/src/obj/build.h :
